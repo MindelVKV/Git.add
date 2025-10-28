@@ -1,30 +1,20 @@
+import RPi.GPIO as IO
 import time
-from r2r_adc import R2R_ADC
-from adc_plot import plot_voltage_vs_time
+import r2r_adc as r2r
+import adc_plot as plt
 
-adc = None
+adc = r2r.R2R_ADC(3.29)
+time_values = []
+voltage_values = []
+duration = 10.0
 try:
-    dynamic_range = 3.3
-    duration = 3.0
-    
-    adc = R2R_ADC(dynamic_range)
-    
-    voltage_values = []
-    time_values = []
-    
-    start_time = time.time()
-    
-    while time.time() - start_time < duration:
-        current_time = time.time() - start_time
-        current_voltage = adc.get_sc_voltage()
-        
-        voltage_values.append(current_voltage)
-        time_values.append(current_time)
-        
-        print(f"Время: {current_time:.1f} с, Напряжение: {current_voltage:.3f} В")
-    
-    plot_voltage_vs_time(time_values, voltage_values, dynamic_range)
-
+    start_time=time.time()
+    now_time=time.time()
+    while now_time-start_time<duration:
+        now_time=time.time()
+        voltage_values.append(adc.get_sc_voltage())
+        time_values.append(now_time-start_time)
+    plt.plot_voltage_vs_time(time_values, voltage_values, 3.29)
+    plt.plot_sampling_period_hist(time_values)
 finally:
-    if adc is not None:
-        adc.__del__()
+        adc.deinit()
