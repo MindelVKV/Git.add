@@ -6,7 +6,7 @@ import adc_plot as plt
 adc = r2r.R2R_ADC(3.29)
 time_values = []
 voltage_values = []
-duration = 10.0
+duration = 9.0
 try:
     start_time=time.time()
     now_time=time.time()
